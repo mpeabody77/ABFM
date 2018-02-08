@@ -9,6 +9,8 @@ Imports:
   ggplot2,
   plyr,
   reshape2,
-  rmarkdown
+  rmarkdown,
+  tools,
+  tidyr
 License: What license is it under?
 LazyData: TRUE

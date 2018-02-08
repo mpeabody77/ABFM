@@ -87,7 +87,7 @@ scoring_PRIMARY<-function() {
   return (write.csv(DATA, "Scoring/DATA.csv", row.names=FALSE))
 
 
-  rmarkdown::render("input.Rmd")
+  rmarkdown::render("input.Rmd", output_file = "Report.html",  output_dir = "./Scoring")
 
 
 }

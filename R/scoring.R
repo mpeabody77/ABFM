@@ -8,6 +8,7 @@ scoring_PRIMARY<-function() {
   library(tools)
   library(plyr)
   library(reshape2)
+  library(rmarkdown)
 
 
   filenames.PER <- list.files(path="./Scoring/PER")
@@ -86,8 +87,7 @@ scoring_PRIMARY<-function() {
 
   return (write.csv(DATA, "Scoring/DATA.csv", row.names=FALSE))
 
-
-  rmarkdown::render("input.Rmd", output_file = "Report.html",  output_dir = "./Scoring")
+  render("./inst/rmd/input.Rmd", output_file = "report.html", output_dir = "Scoring")
 
 
 }

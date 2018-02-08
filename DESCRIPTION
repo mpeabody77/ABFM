@@ -1,9 +1,9 @@
 Package: ABFM
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Scoring code for the ABFM's exams
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
+Author: Michael Peabody
+Maintainer: Michael Peabody <mpeabody@theabfm.org>
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
 LazyData: TRUE

@@ -8,7 +8,6 @@ scoring_PRIMARY<-function() {
   library(tools)
   library(plyr)
   library(reshape2)
-  library(tidyr)
 
 
   filenames.PER <- list.files(path="./Scoring/PER")

@@ -10,7 +10,6 @@ Imports:
   plyr,
   reshape2,
   rmarkdown,
-  tools,
-  tidyr
+  tools
 License: What license is it under?
 LazyData: TRUE

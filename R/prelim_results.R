@@ -8,7 +8,7 @@ preliminary_PRIMARY<-function() {
 
 
   #NEED TO GET A CSV FILE FOR DEMOGRAPHICS WHERE COL1=ENTRY
-  DATA<-read.csv("./Scoring/PER/PER_Overall.CSV")
+  DATA<-read.csv("./Scoring/PER/PER_Overall.CSV", skip=1)
   ID<-read.csv("./Scoring/ID.csv")
   ID$Repeater<-ifelse(ID$Consecutive.Fails>0, "REPEAT", "FIRST")
 
@@ -21,7 +21,7 @@ preliminary_PRIMARY<-function() {
   DATA$Scaled_Score_Detailed <-  (218.47*DATA$MEASURE) + 250.86
   DATA$Scaled_Score <- round_any(((218.47*DATA$MEASURE) + 250.86),10, floor)
   DATA$Scaled_Score_SE<-((218.47*(DATA$MEASURE))+250.86 -
-                            ((218.47*((DATA$MEASURE)-(DATA$MODLSE)))+250.86))
+                           ((218.47*((DATA$MEASURE)-(DATA$MODLSE)))+250.86))
   DATA$pct_correct<-(DATA$SCORE/DATA$COUNT)*100
   DATA$CIH<-DATA$Scaled_Score_Detailed + DATA$Scaled_Score_SE
   DATA$CIL<-DATA$Scaled_Score_Detailed - DATA$Scaled_Score_SE
@@ -34,8 +34,10 @@ preliminary_PRIMARY<-function() {
 
 
   #CALCULATE PASS/FAIL
-  DATA$PF_Overall<-ifelse(DATA$Scaled_Score.Overall>=380, "PASS", "FAIL")
-  DATA$Unanswered<-DATA$COUNT.Overall - DATA$COUNT.Unanswered
+  DATA$PF_Overall<-ifelse(DATA$Scaled_Score>=380, "PASS", "FAIL")
+
+  #MERGE with ID
+  DATA<-merge(ID, DATA, by="ENTRY")
 
   return (write.csv(DATA, "Scoring/Preliminary_Results.csv", row.names=FALSE))
 
@@ -43,6 +45,7 @@ preliminary_PRIMARY<-function() {
 
 
 }
+
 
 
 

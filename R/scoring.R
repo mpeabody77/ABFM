@@ -8,7 +8,6 @@ scoring_PRIMARY<-function() {
   library(tools)
   library(plyr)
   library(reshape2)
-  library(rmarkdown)
 
 
 
@@ -118,10 +117,6 @@ scoring_PRIMARY<-function() {
 
 }
 
-  render("input.Rmd", output_file = "report.html", output_dir = "Scoring")
-
-
-}
 
 
 

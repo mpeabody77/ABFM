@@ -11,6 +11,8 @@ scoring_PRIMARY<-function() {
   library(rmarkdown)
 
 
+
+
   filenames.PER <- list.files(path="./Scoring/PER")
   names.PER<-file_path_sans_ext(filenames.PER)
 
@@ -25,8 +27,32 @@ scoring_PRIMARY<-function() {
 
 
   #NEED TO GET A CSV FILE FOR DEMOGRAPHICS WHERE COL1=ENTRY
-  ID<-read.csv("./Scoring/ID.csv")
-  ID$Repeater<-ifelse(ID$Consecutive.Fails>0, "REPEAT", "FIRST")
+  ID<-PER_Overall
+  ID<-subset(ID, select=(NAME))
+  library(tidyr)
+  ID<-ID %>%
+    separate(NAME, into = c("ID.Code",
+                            "Gender",
+                            "Ethnicity",
+                            "Degree",
+                            "Med.School",
+                            "Cert.Recert",
+                            "IMG",
+                            "Total.Exams",
+                            "Total.Fails",
+                            "Consec.Fails",
+                            "ACGME",
+                            "Fellowship",
+                            "Cert.Year",
+                            "Form",
+                            "Last.Name",
+                            "First.Name",
+                            "State",
+                            "Zip",
+                            "Test.Center",
+                            "Exam.Date"), sep = c(7, 12, 14, 17, 28, 30, 32, 34, 37, 40, 52,
+                                                  57, 68, 70, 100, 130, 133, 139, 145))
+  ID$Repeater<-ifelse(ID$Consec.Fails>0, "REPEAT", "FIRST")
 
 
   #DROP UNUSED VARIABLES
@@ -79,13 +105,18 @@ scoring_PRIMARY<-function() {
   #MERGE SUBTESTS INTO FINAL DATA
   l.df <- lapply(ls(pattern="PER_"), function(x) get(x))
   DATA<-join_all(l.df, by="ENTRY", type = "full", match = "all")
-  DATA<-join(ID, DATA, by="ENTRY")
+  DATA.ID<-merge(ID, DATA, by="row.names")
+  DATA.ID<-subset(DATA.ID, select=-c(Row.names))
+  DATA.ID <- DATA.ID[order(DATA.ID[,'ENTRY']),]
+
 
   #CALCULATE PASS/FAIL
   DATA$PF_Overall<-ifelse(DATA$Scaled_Score.Overall>=380, "PASS", "FAIL")
   DATA$Unanswered<-DATA$COUNT.Overall - DATA$COUNT.Unanswered
 
   return (write.csv(DATA, "Scoring/DATA.csv", row.names=FALSE))
+
+}
 
   render("input.Rmd", output_file = "report.html", output_dir = "Scoring")
 

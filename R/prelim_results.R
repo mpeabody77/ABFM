@@ -56,8 +56,6 @@ preliminary_PRIMARY<-function() {
 
   write.csv(DATA3, "Scoring/Preliminary_Results.csv", row.names=FALSE)
 
-
-
 }
 
 

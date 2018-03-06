@@ -1,46 +1,60 @@
 preliminary_PRIMARY<-function() {
-  #packages to load (dependencies)
-  library(tools)
-  library(plyr)
-  library(reshape2)
-  library(rmarkdown)
 
-
-
-  #NEED TO GET A CSV FILE FOR DEMOGRAPHICS WHERE COL1=ENTRY
   DATA<-read.csv("./Scoring/PER/PER_Overall.CSV", skip=1)
-  ID<-read.csv("./Scoring/ID.csv")
-  ID$Repeater<-ifelse(ID$Consecutive.Fails>0, "REPEAT", "FIRST")
-
-
-  #DROP UNUSED VARIABLES
+  ID<-read.csv("./Scoring/PER/PER_Overall.CSV", skip=1)
+  ID<-subset(ID, select=c(NAME))
+  Unanswered<-read.csv("./Scoring/PER/PER_Unanswered.CSV", skip=1)
   DATA<-subset(DATA, select = -c(STATUS,IN.MSQ,IN.ZSTD,OUT.MSQ,OUT.ZSTD,DISPLACE,PTMA,PTMA.E,
-                                 WEIGHT,OBSMATCH,EXPMATCH,PVALUE,PTMA,RMSR,WMLE,NAME))
+                                 WEIGHT,OBSMATCH,EXPMATCH,PVALUE,PTMA,RMSR,WMLE))
 
   #SCORING RUN
-  DATA$Scaled_Score_Detailed <-  (218.47*DATA$MEASURE) + 250.86
-  DATA$Scaled_Score <- round_any(((218.47*DATA$MEASURE) + 250.86),10, floor)
-  DATA$Scaled_Score_SE<-((218.47*(DATA$MEASURE))+250.86 -
-                           ((218.47*((DATA$MEASURE)-(DATA$MODLSE)))+250.86))
-  DATA$pct_correct<-(DATA$SCORE/DATA$COUNT)*100
-  DATA$CIH<-DATA$Scaled_Score_Detailed + DATA$Scaled_Score_SE
-  DATA$CIL<-DATA$Scaled_Score_Detailed - DATA$Scaled_Score_SE
-  DATA$Scaled_Score<-ifelse(DATA$Scaled_Score < 200,200, DATA$Scaled_Score)
-  DATA$Scaled_Score<-ifelse(DATA$Scaled_Score > 800,800, DATA$Scaled_Score)
-  DATA$CIH<-ifelse(DATA$CIH > 1000, 1000, DATA$CIH)
-  DATA$CIH<-ifelse(DATA$Scaled_Score==200 & DATA$CIH < 220, 220, DATA$CIH)
-  DATA$CIL<-ifelse(DATA$CIH < 0, 0, DATA$CIL)
-  DATA$CIL<-ifelse(DATA$Scaled_Score==800 & DATA$CIL >780, 780, DATA$CIL)
+  DATA$N.Correct <- DATA$SCORE
+  DATA$N.Incorrect<-DATA$COUNT - DATA$SCORE
+  DATA$N.Unanswered<-DATA$COUNT - Unanswered$COUNT
+  DATA$Pct.Correct <- (DATA$SCORE/DATA$COUNT)*100
+  DATA$Scaled.Score.Detailed <-  (218.47*DATA$MEASURE) + 250.86
+  library(plyr)
+  DATA$Scaled.Score <- round_any(((218.47*DATA$MEASURE) + 250.86),10, floor)
+  DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=400, "FAIL",
+                            ifelse(DATA$Scaled.Score >= 450, "PASS", "GRAY"))
+  DATA$PF.Prelim.pct<-ifelse(DATA$Pct.Correct >= 62, "PASS",
+                             ifelse(DATA$Pct.Correct <= 50, "FAIL", "GRAY"))
+  DATA$PF.Agree <- ifelse(DATA$PF.Prelim.ss == DATA$PF.Prelim.pct, 1, 0)
+  DATA$TOO.MANY.MISSING <- ifelse(DATA$N.Unanswered >=3, "HOLD", "OK")
+  DATA$RESULT <- ifelse(DATA$PF.Agree == 1, DATA$PF.Prelim.ss, "HOLD")
+  DATA$RESULT <- ifelse(DATA$TOO.MANY.MISSING =="HOLD", "HOLD", DATA$RESULT)
 
+  DATA<-subset(DATA, select = -c(ENTRY, MEASURE, COUNT, SCORE, MODLSE))
 
-  #CALCULATE PASS/FAIL
-  DATA$PF_Overall<-ifelse(DATA$Scaled_Score>=380, "PASS", "FAIL")
+  library(tidyr)
+  ID<-ID %>%
+    separate(NAME, into = c("ID.Code",
+                            "Gender",
+                            "Ethnicity",
+                            "Degree",
+                            "Med.School",
+                            "Cert.Recert",
+                            "IMG",
+                            "Total.Exams",
+                            "Total.Fails",
+                            "Consec.Fails",
+                            "ACGME",
+                            "Fellowship",
+                            "Cert.Year",
+                            "Form",
+                            "Last.Name",
+                            "First.Name",
+                            "State",
+                            "Zip",
+                            "Test.Center",
+                            "Exam.Date"), sep = c(7, 12, 14, 17, 28, 30, 32, 34, 37, 40, 52,
+                                                  57, 68, 70, 100, 130, 133, 139, 145))
 
-  #MERGE with ID
-  DATA<-merge(ID, DATA, by="ENTRY")
+  ID<-as.data.frame(apply(ID,2,function(x)gsub('\\s+', '',x)))
+  DATA2<-merge(ID, DATA, by="row.names")
+  DATA3<-subset(DATA2, select=-c(Row.names, NAME))
 
-  return (write.csv(DATA, "Scoring/Preliminary_Results.csv", row.names=FALSE))
-
+  write.csv(DATA3, "Scoring/Preliminary_Results.csv", row.names=FALSE)
 
 
 

@@ -352,8 +352,8 @@ preliminary_PRIMARY<-function() {
   DATA$Scaled.Score.Detailed <-  (218.47*DATA$MEASURE) + 250.86
   library(plyr)
   DATA$Scaled.Score <- round_any(((218.47*DATA$MEASURE) + 250.86),10, floor)
-  DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=400, "FAIL",
-                            ifelse(DATA$Scaled.Score >= 450, "PASS", "PENDING"))
+  DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=360, "FAIL",
+                            ifelse(DATA$Scaled.Score >= 410, "PASS", "PENDING"))
   DATA$PF.Prelim.pct<-ifelse(DATA$Pct.Correct >= 62, "PASS",
                              ifelse(DATA$Pct.Correct <= 50, "FAIL", "PENDING"))
   DATA$PF.Agree <- ifelse(DATA$PF.Prelim.ss == DATA$PF.Prelim.pct, 1, 0)

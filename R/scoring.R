@@ -337,10 +337,10 @@ scoring_PRIMARY<-function() {
 
 preliminary_PRIMARY<-function() {
 
-  DATA<-read.csv("./Scoring/PER/PER_Overall.CSV", skip=1)
-  ID<-read.csv("./Scoring/PER/PER_Overall.CSV", skip=1)
+  DATA<-read.csv("./PER_Overall.CSV", skip=1)
+  ID<-read.csv("./PER_Overall.CSV", skip=1)
   ID<-subset(ID, select=c(NAME))
-  Unanswered<-read.csv("./Scoring/PER/PER_Unanswered.CSV", skip=1)
+  Unanswered<-read.csv("./PER_Unanswered.CSV", skip=1)
   DATA<-subset(DATA, select = -c(STATUS,IN.MSQ,IN.ZSTD,OUT.MSQ,OUT.ZSTD,DISPLACE,PTMA,PTMA.E,
                                  WEIGHT,OBSMATCH,EXPMATCH,PVALUE,PTMA,RMSR,WMLE))
 
@@ -391,7 +391,7 @@ preliminary_PRIMARY<-function() {
   DATA2<-merge(ID, DATA, by="row.names")
   DATA3<-subset(DATA2, select=-c(Row.names, NAME))
 
-  write.csv(DATA3, "Scoring/Preliminary_Results.csv", row.names=FALSE)
+  write.csv(DATA3, "Preliminary_Results.csv", row.names=FALSE)
 
 }
 

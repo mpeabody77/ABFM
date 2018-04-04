@@ -387,7 +387,7 @@ preliminary_PRIMARY<-function() {
                             "Exam.Date"), sep = c(7, 12, 14, 17, 28, 30, 32, 34, 37, 40, 52,
                                                   57, 68, 70, 100, 130, 133, 139, 145))
 
-  ID<-as.data.frame(apply(ID,2,function(x)gsub('\\s+', '',x)))
+  #ID<-as.data.frame(apply(ID,2,function(x)gsub('\\s+', '',x)))
   DATA2<-merge(ID, DATA, by="row.names")
   DATA3<-subset(DATA2, select=-c(Row.names, NAME))
 

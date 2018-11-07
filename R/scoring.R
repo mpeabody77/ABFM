@@ -358,7 +358,7 @@ preliminary_PRIMARY<-function() {
   #                           ifelse(DATA$Pct.Correct <= 50, "FAIL", "PENDING"))
   DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=370, "FAIL",
                           ifelse(DATA$Scaled.Score >= 380, "PASS", "PENDING"))
-  DATA$PF.Prelim.pct<-DATD$PF.Prelim.ss
+  DATA$PF.Prelim.pct<-DATA$PF.Prelim.ss
   DATA$PF.Agree <- ifelse(DATA$PF.Prelim.ss == DATA$PF.Prelim.pct, 1, 0)
   DATA$TOO.MANY.MISSING <- ifelse(DATA$N.Unanswered >=3, "HOLD", "OK")
   DATA$RESULT <- ifelse(DATA$PF.Agree == 1, DATA$PF.Prelim.ss, "PENDING")

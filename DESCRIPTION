@@ -6,10 +6,10 @@ Author: Michael Peabody
 Maintainer: Michael Peabody <mpeabody@theabfm.org>
 Description: More about what it does (maybe more than one line)
 Imports:
-  ggplot2,
-  plyr,
-  reshape2,
-  rmarkdown,
-  tools
+ ggplot2,
+ plyr,
+ reshape2,
+ rmarkdown,
+ tools
 License: What license is it under?
 LazyData: TRUE

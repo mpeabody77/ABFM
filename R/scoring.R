@@ -353,7 +353,7 @@ preliminary_PRIMARY<-function() {
   #library(plyr)
   DATA$Scaled.Score <- plyr::round_any(((218.47*DATA$MEASURE) + 250.86),10, floor)
   DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=360, "FAIL",
-                            ifelse(DATA$Scaled.Score >= 420, "PASS", "PENDING"))
+                            ifelse(DATA$Scaled.Score > 420, "PASS", "PENDING"))
   DATA$PF.Prelim.pct<-ifelse(DATA$Pct.Correct >= 62, "PASS",
                              ifelse(DATA$Pct.Correct <= 50, "FAIL", "PENDING"))
   DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=370, "FAIL",

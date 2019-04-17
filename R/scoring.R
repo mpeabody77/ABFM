@@ -360,9 +360,7 @@ preliminary_PRIMARY<-function() {
   #                        ifelse(DATA$Scaled.Score >= 380, "PASS", "PENDING"))
   #DATA$PF.Prelim.pct<-DATA$PF.Prelim.ss
   DATA$PF.Agree <- ifelse(DATA$PF.Prelim.ss == DATA$PF.Prelim.pct, 1, 0)
-  DATA$TOO.MANY.MISSING <- ifelse(DATA$N.Unanswered >=3, "HOLD", "OK")
   DATA$RESULT <- ifelse(DATA$PF.Agree == 1, DATA$PF.Prelim.ss, "PENDING")
-  #DATA$RESULT <- ifelse(DATA$TOO.MANY.MISSING =="HOLD", "PENDING", DATA$RESULT)
 
   DATA<-subset(DATA, select = -c(ENTRY, MEASURE, COUNT, SCORE, MODLSE))
 

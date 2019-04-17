@@ -350,19 +350,19 @@ preliminary_PRIMARY<-function() {
   DATA$N.Unanswered<-DATA$COUNT - Unanswered$COUNT
   DATA$Pct.Correct <- (DATA$SCORE/DATA$COUNT)*100
   DATA$Scaled.Score.Detailed <-  (218.47*DATA$MEASURE) + 250.86
-  library(plyr)
-  DATA$Scaled.Score <- round_any(((218.47*DATA$MEASURE) + 250.86),10, floor)
-  #DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=360, "FAIL",
-  #                          ifelse(DATA$Scaled.Score >= 410, "PASS", "PENDING"))
-  #DATA$PF.Prelim.pct<-ifelse(DATA$Pct.Correct >= 62, "PASS",
-  #                           ifelse(DATA$Pct.Correct <= 50, "FAIL", "PENDING"))
+  #library(plyr)
+  DATA$Scaled.Score <- plyr::round_any(((218.47*DATA$MEASURE) + 250.86),10, floor)
+  DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=360, "FAIL",
+                            ifelse(DATA$Scaled.Score >= 420, "PASS", "PENDING"))
+  DATA$PF.Prelim.pct<-ifelse(DATA$Pct.Correct >= 62, "PASS",
+                             ifelse(DATA$Pct.Correct <= 50, "FAIL", "PENDING"))
   DATA$PF.Prelim.ss<-ifelse(DATA$Scaled.Score<=370, "FAIL",
                           ifelse(DATA$Scaled.Score >= 380, "PASS", "PENDING"))
   DATA$PF.Prelim.pct<-DATA$PF.Prelim.ss
   DATA$PF.Agree <- ifelse(DATA$PF.Prelim.ss == DATA$PF.Prelim.pct, 1, 0)
   DATA$TOO.MANY.MISSING <- ifelse(DATA$N.Unanswered >=3, "HOLD", "OK")
   DATA$RESULT <- ifelse(DATA$PF.Agree == 1, DATA$PF.Prelim.ss, "PENDING")
-  DATA$RESULT <- ifelse(DATA$TOO.MANY.MISSING =="HOLD", "PENDING", DATA$RESULT)
+  #DATA$RESULT <- ifelse(DATA$TOO.MANY.MISSING =="HOLD", "PENDING", DATA$RESULT)
 
   DATA<-subset(DATA, select = -c(ENTRY, MEASURE, COUNT, SCORE, MODLSE))
 
